@@ -3,3 +3,7 @@ CREATE TABLE tb_atividade(
     descricao VARCHAR(200),
     data_de_ocorrencia TIMESTAMP NOT NULL
 );
+
+DELETE FROM tb_atividade;
+
+SELECT * FROM tb_atividade;
