@@ -62,9 +62,11 @@ class TesteJogo{
             op = Integer.parseInt(JOptionPane.showInputDialog(null, s));
             switch(op){
                 case 1:
+                    int pontuacao = 0;
                     for(int i = 0; i < 10; i++){
-                        jogar(p, codUsuario);
+                        pontuacao += jogar(p, codUsuario);
                     }
+                    DAO.cadastrarResultado(codUsuario, pontuacao);
                     break;
                 case 2:
                     var atividades = DAO.listarAtividades();
@@ -81,7 +83,8 @@ class TesteJogo{
         }while(op != 0);
     }
 
-    public static void jogar(Personagem p, int codUsuario){
+    public static int jogar(Personagem p, int codUsuario){
+        int retorno = 0;
         var acao = new Random();
         Atividade atv = new Atividade();
         try{
@@ -89,6 +92,7 @@ class TesteJogo{
                 case 0:
                     p.cacar();
                     atv = new Atividade("caçar", codUsuario);
+                    retorno = 2;
                     break;
                 case 1: 
                     p.comer();
@@ -97,6 +101,7 @@ class TesteJogo{
                 case 2:
                     p.dormir();
                     atv = new Atividade("dormir", codUsuario);
+                    retorno = -1;
                     break;
             }
             DAO.cadastrarAtividade(atv);
@@ -104,5 +109,6 @@ class TesteJogo{
         catch(Exception e){
             JOptionPane.showMessageDialog(null, "Não foi possível estabelecer conexão");
         }
+        return retorno;
     }
 }

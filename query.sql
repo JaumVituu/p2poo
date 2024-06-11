@@ -25,3 +25,12 @@ ADD FOREIGN KEY(fk_usuario) REFERENCES tb_usuario(cod_usuario);
 ALTER TABLE tb_atividade
 DROP fk_usuario;
 
+CREATE TABLE tb_resultado(
+    cod_resultado SERIAL PRIMARY KEY,
+    fk_usuario  INT,
+    pontuacao   INT,
+    data_de_ocorrencia TIMESTAMP,
+    FOREIGN KEY (fk_usuario) REFERENCES tb_usuario(cod_usuario)
+);
+
+SELECT * FROM tb_resultado;

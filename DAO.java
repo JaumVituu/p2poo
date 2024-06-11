@@ -87,4 +87,15 @@ public class DAO{
         c.close();
         return cod;
     }
+
+    public static void cadastrarResultado(int codUsuario, int pontuacao) throws Exception{
+        String sql = "INSERT INTO tb_resultado(fk_usuario, pontuacao, data_de_ocorrencia) VALUES(?,?,CURRENT_TIMESTAMP);";
+        Connection c = ConnectionFactory.getConnection();
+        PreparedStatement ps = c.prepareStatement(sql);
+        ps.setInt(1, codUsuario);
+        ps.setInt(2, pontuacao);
+        ps.execute();
+        ps.close();
+        c.close();
+    }
 }
