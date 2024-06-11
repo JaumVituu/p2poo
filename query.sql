@@ -37,3 +37,10 @@ SELECT * FROM tb_resultado;
 
 ALTER TABLE tb_usuario
 ALTER COLUMN login TYPE VARCHAR(15);
+
+INSERT INTO tb_resultado (fk_usuario, pontuacao, data_de_ocorrencia)
+VALUES(6, 99, CURRENT_TIMESTAMP);
+
+UPDATE tb_usuario 
+SET login = 'Joao'
+WHERE cod_usuario = 6;
