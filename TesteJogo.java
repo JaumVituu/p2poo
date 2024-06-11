@@ -56,7 +56,7 @@ class TesteJogo{
                 break;
         }
 
-        s = "0 - Sair\n1 - Jogar\n2 - Consultar log";
+        s = "1 - Jogar\n2 - Consultar log";
         do{
             op = Integer.parseInt(JOptionPane.showInputDialog(null, s));
             switch(op){
