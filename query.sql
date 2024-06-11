@@ -16,7 +16,7 @@ INSERT INTO tb_usuario(login, senha) VALUES('teste', 'teste');
 
 SELECT * FROM tb_usuario;
 
-DELETE FROM tb_usuario WHERE cod_usuario = 1;
+DELETE FROM tb_usuario;
 
 ALTER TABLE tb_atividade
 ADD fk_usuario INT,
@@ -34,3 +34,6 @@ CREATE TABLE tb_resultado(
 );
 
 SELECT * FROM tb_resultado;
+
+ALTER TABLE tb_usuario
+ALTER COLUMN login TYPE VARCHAR(15);

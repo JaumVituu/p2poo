@@ -32,7 +32,7 @@ public class Atividade {
     }
 
     public String toString(){
-        var s = String.format("Desc: %7s| Cod: %3d | Usuário: %15s | Data: %29s", descricao, id, usuario, dataOcorrencia);
+        var s = String.format("Desc: %7s| Cod: %3d | Usuário: %15s | Data: %s", descricao, id, usuario.length() > 10 ? usuario.substring(0, 9) : usuario, dataOcorrencia);
         return s;
     }
 }

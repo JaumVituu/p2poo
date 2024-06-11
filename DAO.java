@@ -98,4 +98,24 @@ public class DAO{
         ps.close();
         c.close();
     }
+
+    public static java.util.List<Resultado> listarResultados() throws Exception{
+        var sql = "SELECT tr.*, tu.login FROM tb_resultado AS tr INNER JOIN tb_usuario as tu ON tr.fk_usuario = tu.cod_usuario ORDER BY tr.pontuacao DESC, tr.data_de_ocorrencia ASC;";
+        Connection c = ConnectionFactory.getConnection();
+        PreparedStatement ps = c.prepareStatement(sql);
+        java.sql.ResultSet rs = ps.executeQuery();
+        LinkedList lista = new LinkedList<Resultado>();
+        while(rs.next()){
+            Resultado r = new Resultado(
+                rs.getString("login"),
+                rs.getInt("pontuacao"),
+                rs.getString("data_de_ocorrencia")
+            );
+            lista.add(r);
+        }
+        rs.close();
+        ps.close();
+        c.close();
+        return lista;
+    }
 }

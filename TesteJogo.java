@@ -1,10 +1,12 @@
 import java.util.Random;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.Dimension;
 
 class TesteJogo{
     public static void main(String[] args)throws Exception{
         Personagem p = new Personagem();
-        p.nome = "Pelé";
         int op;
         String login = null;
         String senha = null;
@@ -57,7 +59,12 @@ class TesteJogo{
                 break;
         }
         codUsuario = DAO.getCodUsuario(login);
-        s = "1 - Jogar\n2 - Consultar log";
+        p.nome = login;
+        StringBuilder sbLinha = new StringBuilder("");
+        for(int i = 0;  i < 15; i++){
+            sbLinha.append("--------"); // tem 8 traços - 8 * 15 = 120 traços no total
+        }
+        s = "1 - Jogar\n2 - Consultar log\n3 - Exibir Ranking";
         do{
             op = Integer.parseInt(JOptionPane.showInputDialog(null, s));
             switch(op){
@@ -68,19 +75,42 @@ class TesteJogo{
                     }
                     DAO.cadastrarResultado(codUsuario, pontuacao);
                     break;
-                case 2:
-                    var atividades = DAO.listarAtividades();
-                    var sb = new StringBuilder("\n");
-                    for(Atividade atv : atividades){
-                        sb.append(atv).append("\n");
+
+                case 2:{
+                        var atividades = DAO.listarAtividades();
+                        var sb = new StringBuilder("\n");
+                        for(Atividade atv : atividades){
+                            sb.append(atv).append("\n");
+                            sb.append(sbLinha.toString()).append("\n");
+                        }
+
+                        JTextArea textArea = new JTextArea(sb.toString()); // Quadro que exibe texto da sb dentro de uma janela do Jframe
+                        JScrollPane scrollPane = new JScrollPane(textArea);  //Anexa o component textarea a um painel com barra de rolamento
+                        scrollPane.setPreferredSize( new Dimension( 500, 800 ) ); // Escolhe o tamanho do scrollpane
+                        JOptionPane.showMessageDialog(null, scrollPane, "Logs de Atividade", JOptionPane.OK_OPTION); 
+                        //cria uma JOptionPane com o componente de textarea atrelado ao scrollpane com um botao de OK.
+                        break;
                     }
-                    JOptionPane.showMessageDialog(null, sb.toString());
-                    break;
-                case 0 :break;
+
+                case 3:{
+                        var resultados = DAO.listarResultados();
+                        var sb = new StringBuilder("\n");
+                        for(Resultado r : resultados){
+                            sb.append(r).append("\n");
+                            sb.append(sbLinha.toString().substring(0,99)).append("\n");
+                        }
+                        JTextArea textArea = new JTextArea(sb.toString()); // Quadro que exibe texto da sb dentro de uma janela do Jframe
+                        JScrollPane scrollPane = new JScrollPane(textArea);  //Anexa o component textarea a um painel com barra de rolamento
+                        scrollPane.setPreferredSize( new Dimension( 400, 400 ) ); // Escolhe o tamanho do scrollpane
+                        JOptionPane.showMessageDialog(null, scrollPane, "Resultados", JOptionPane.OK_OPTION); 
+                        //cria uma JOptionPane com o componente de textarea atrelado ao scrollpane com um botao de OK.
+                        break;
+                    }
+
                 default:
                     JOptionPane.showMessageDialog(null, "Digite um valor válido.");
             }
-        }while(op != 0);
+        }while(true);
     }
 
     public static int jogar(Personagem p, int codUsuario){
