@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
 
 public class DAO{
@@ -38,5 +39,31 @@ public class DAO{
         c.close();
 
         return atividades;
+    }
+
+    public static String buscarLogin(String l) throws Exception{
+        var sql = "SELECT * FROM tb_usuario WHERE login = ?;";
+        Connection c = ConnectionFactory.getConnection();
+        PreparedStatement ps = c.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ps.setString(1, l);
+        java.sql.ResultSet rs = ps.executeQuery();
+        if(rs.first()){
+            var senha = rs.getString("senha");
+            ps.close();
+            c.close();
+            return senha;
+        }
+        return null;
+    }
+
+    public static void cadastrarUsuario(String login, String senha) throws Exception{
+        var sql = "INSERT INTO tb_usuario(login, senha) VALUES(?,?);";
+        Connection c = ConnectionFactory.getConnection();
+        PreparedStatement ps = c.prepareStatement(sql);
+        ps.setString(1, login);
+        ps.setString(2, senha);
+        ps.execute();
+        ps.close();
+        c.close();
     }
 }

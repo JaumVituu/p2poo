@@ -1,13 +1,62 @@
 import java.util.Random;
-import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 class TesteJogo{
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args)throws Exception{
         Personagem p = new Personagem();
         p.nome = "Pelé";
-        var s = "0 - Sair\n1 - Jogar\n2 - Consultar log";
         int op;
+        String login = null;
+        String senha = null;
+        var s = "1 - Realizar login\n2 - Efetuar cadastro";
+        op = Integer.parseInt(JOptionPane.showInputDialog(s));
+        switch(op){
+            case 1:
+                do{
+                    login = JOptionPane.showInputDialog("Digite o seu login");
+                    if(login == null) System.exit(0);
+                    var senhaEsperada = DAO.buscarLogin(login);
+                    if(senhaEsperada == null){
+                        JOptionPane.showMessageDialog(null, "Login não encontrado.");
+                    }
+                    else{
+                        senha = JOptionPane.showInputDialog("Digite sua senha");
+                        if(senha == null) System.exit(0);
+                        if(!senha.equals(senhaEsperada)){
+                            JOptionPane.showMessageDialog(null, "Senha incorreta.");
+                            continue;
+                        }
+                        break;
+                    }
+                }while(true);
+                break;
+            case 2:
+                do{
+                    login = JOptionPane.showInputDialog("Digite o seu login");
+                    if(login == null) System.exit(0);
+                    if(DAO.buscarLogin(login) != null){
+                        JOptionPane.showMessageDialog(null, "Login já existe.");
+                    }
+                    else{
+                        senha = JOptionPane.showInputDialog("Digite sua senha");
+                        if(senha == null) System.exit(0);
+                        if(senha.length() < 3){
+                            JOptionPane.showMessageDialog(null, "Digite uma senha maior.");
+                            continue;
+                        }
+                        DAO.cadastrarUsuario(login, senha);
+                        break;
+                    }
+                    
+                }while(true);
+                break;
+            default:
+                JOptionPane.showMessageDialog(null, "Valor inválido. Programa encerrando");
+                System.exit(0);
+                break;
+        }
+
+        s = "0 - Sair\n1 - Jogar\n2 - Consultar log";
         do{
             op = Integer.parseInt(JOptionPane.showInputDialog(null, s));
             switch(op){
