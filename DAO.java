@@ -41,6 +41,7 @@ public class DAO{
             );
             atividades.add(atv);
         }
+        rs.close();
         ps.close();
         c.close();
 
@@ -59,6 +60,7 @@ public class DAO{
             c.close();
             return senha;
         }
+        rs.close();
         ps.close();
         c.close();
         return null;
@@ -83,6 +85,7 @@ public class DAO{
         java.sql.ResultSet rs = ps.executeQuery();
         rs.next();
         var cod = rs.getInt("cod_usuario");
+        rs.close();
         ps.close();
         c.close();
         return cod;
@@ -104,7 +107,7 @@ public class DAO{
         Connection c = ConnectionFactory.getConnection();
         PreparedStatement ps = c.prepareStatement(sql);
         java.sql.ResultSet rs = ps.executeQuery();
-        LinkedList lista = new LinkedList<Resultado>();
+        var lista = new LinkedList<Resultado>();
         while(rs.next()){
             Resultado r = new Resultado(
                 rs.getString("login"),
