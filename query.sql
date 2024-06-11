@@ -17,3 +17,11 @@ INSERT INTO tb_usuario(login, senha) VALUES('teste', 'teste');
 SELECT * FROM tb_usuario;
 
 DELETE FROM tb_usuario WHERE cod_usuario = 1;
+
+ALTER TABLE tb_atividade
+ADD fk_usuario INT,
+ADD FOREIGN KEY(fk_usuario) REFERENCES tb_usuario(cod_usuario);
+
+ALTER TABLE tb_atividade
+DROP fk_usuario;
+

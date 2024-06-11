@@ -1,6 +1,6 @@
 import java.util.Random;
-
 import javax.swing.JOptionPane;
+
 class TesteJogo{
     public static void main(String[] args)throws Exception{
         Personagem p = new Personagem();
@@ -8,6 +8,7 @@ class TesteJogo{
         int op;
         String login = null;
         String senha = null;
+        int codUsuario;
         var s = "1 - Realizar login\n2 - Efetuar cadastro";
         op = Integer.parseInt(JOptionPane.showInputDialog(s));
         switch(op){
@@ -55,14 +56,14 @@ class TesteJogo{
                 System.exit(0);
                 break;
         }
-
+        codUsuario = DAO.getCodUsuario(login);
         s = "1 - Jogar\n2 - Consultar log";
         do{
             op = Integer.parseInt(JOptionPane.showInputDialog(null, s));
             switch(op){
                 case 1:
                     for(int i = 0; i < 10; i++){
-                        jogar(p);
+                        jogar(p, codUsuario);
                     }
                     break;
                 case 2:
@@ -80,22 +81,22 @@ class TesteJogo{
         }while(op != 0);
     }
 
-    public static void jogar(Personagem p){
+    public static void jogar(Personagem p, int codUsuario){
         var acao = new Random();
-        var atv = new Atividade();
+        Atividade atv = new Atividade();
         try{
             switch(acao.nextInt(3)){
                 case 0:
                     p.cacar();
-                    atv.setDescricao("caçar");
+                    atv = new Atividade("caçar", codUsuario);
                     break;
                 case 1: 
                     p.comer();
-                    atv.setDescricao("comer");;
+                    atv = new Atividade("comer", codUsuario);
                     break;
                 case 2:
                     p.dormir();
-                    atv.setDescricao("dormir");;
+                    atv = new Atividade("dormir", codUsuario);
                     break;
             }
             DAO.cadastrarAtividade(atv);

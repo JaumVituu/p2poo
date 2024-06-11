@@ -9,17 +9,19 @@ public class DAO{
         //caso o valor da esquerda resulta em NULL, ele envia o valor a direita
         //Ou seja, caso o valor maximo da tabela cod_atividade for NULL, ou seja, caso nao exista nenhum registro
         //ele coloca 0 no lugar do ID
-        var s = "INSERT INTO tb_atividade(cod_atividade, descricao, data_de_ocorrencia) VALUES((SELECT COALESCE(MAX(cod_atividade), 0) FROM tb_atividade) + 1, ?, CURRENT_TIMESTAMP);";
+        var s = "INSERT INTO tb_atividade(cod_atividade, descricao, data_de_ocorrencia, fk_usuario) VALUES((SELECT COALESCE(MAX(cod_atividade), 0) FROM tb_atividade) + 1, ?, CURRENT_TIMESTAMP, ?);";
         Connection c = ConnectionFactory.getConnection();
         PreparedStatement ps = c.prepareStatement(s);
         ps.setString(1,a.getDescricao());
+        ps.setInt(2, a.getFkUsuario());
         ps.execute();
         ps.close();
         c.close();
     }
 
     public static java.util.List<Atividade> listarAtividades() throws Exception{
-        var sql = "SELECT * FROM tb_atividade ORDER BY data_de_ocorrencia ASC;";
+
+        var sql = "SELECT t1.*, t2.login FROM tb_atividade t1 LEFT JOIN tb_usuario t2 ON t1.fk_usuario = t2.cod_usuario ORDER BY data_de_ocorrencia ASC;";
 
         Connection c = ConnectionFactory.getConnection();
         PreparedStatement ps = c.prepareStatement(sql);
@@ -28,10 +30,14 @@ public class DAO{
 
         var atividades = new LinkedList<Atividade>();
         while(rs.next()){
+            int fk = rs.getInt("fk_usuario");
+            sql = String.format("SELECT login FROM tb_atividade WHERE cod_usuario = %d;", fk);
             var atv = new Atividade(
                 rs.getString("descricao"),
                 rs.getInt("cod_atividade"),
-                rs.getString("data_de_ocorrencia")
+                rs.getString("data_de_ocorrencia"),
+                rs.getInt("fk_usuario"),
+                rs.getString("login")
             );
             atividades.add(atv);
         }
@@ -53,6 +59,8 @@ public class DAO{
             c.close();
             return senha;
         }
+        ps.close();
+        c.close();
         return null;
     }
 
@@ -65,5 +73,18 @@ public class DAO{
         ps.execute();
         ps.close();
         c.close();
+    }
+
+    public static int getCodUsuario(String login) throws Exception{
+        var sql = "SELECT cod_usuario FROM tb_usuario WHERE login = ?;";
+        Connection c = ConnectionFactory.getConnection();
+        PreparedStatement ps = c.prepareStatement(sql);
+        ps.setString(1, login);
+        java.sql.ResultSet rs = ps.executeQuery();
+        rs.next();
+        var cod = rs.getInt("cod_usuario");
+        ps.close();
+        c.close();
+        return cod;
     }
 }
